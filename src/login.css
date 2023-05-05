@@ -1,0 +1,93 @@
+@media only screen and (max-width: 600px) {
+
+    .loginform {
+        position: absolute;
+        margin-left: 200px;
+        right: 0%;
+        width: 45%;
+    }
+
+
+
+}
+
+.loginDiv {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+}
+
+
+.SignupDiv {
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.signupform {
+    border-radius: 20px !important;
+    border: none;
+}
+
+.loginform {
+    border-radius: 20px !important;
+}
+
+.Emaillogin {
+    width: 100%;
+    display: block;
+    border: none;
+    border-bottom: 1px solid #999;
+    padding: 6px 30px;
+    font-family: Poppins;
+    box-sizing: border-box;
+}
+
+
+
+.loginContainer {
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+
+    /* height: 100vh; */
+
+
+}
+
+.SignupContainer {
+    /* background-color: #f2f2f2; */
+    height: 100vh;
+}
+
+.signupform {
+    display: flex;
+    border: none !important;
+}
+
+/* signup styling */
+
+.SignupDiv {
+
+    background-color: #f2f2f2;
+
+}
+
+.InnerContainerSignup {
+    display: flex;
+    /* flex-direction: c; */
+    background-color: #fff;
+    align-items: center;
+    justify-content: center;
+
+}

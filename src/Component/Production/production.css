@@ -1,0 +1,19 @@
+.checkbox {
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+.ItFormContainer {
+    width: '100%' !important;
+}
+
+label {
+    font-size: 20px !important;
+}
+
+.ItInput {
+    padding: 10px;
+
+}
+
+
