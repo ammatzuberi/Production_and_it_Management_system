@@ -2,7 +2,7 @@ import React from "react";
 import { Form, Button, Card, Alert } from "react-bootstrap";
 import { useRef, useState, useEffect } from "react";
 import { useAuth } from "./Component/context/AuthContext";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { collection, query, getDocs, where } from "firebase/firestore";
 import { db } from "./Firebase";
 import "./login.css";
@@ -10,10 +10,12 @@ import { MdEmail } from "react-icons/md";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { height, width } from "@mui/system";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
   const emailRef = useRef();
   const passwordRef = useRef();
+  const { login } = useAuth();
 
   const [loading, setLoading] = useState();
   const [error, setError] = useState("");
@@ -31,34 +33,23 @@ export default function Login() {
   const handleChangeEmail = (e) => {
     // e.preventDefault();
     setEmail(e.target.value);
-    console.log(Email);
+    // console.log(Email);
   };
   const handleChangePassword = (e) => {
     // e.preventDefault();
     setPassword(e.target.value);
   };
   var dept;
-  function handleSubmit(e) {
+
+
+
+  async function handleSubmit(e) {
     e.preventDefault();
 
-    // const query = db
-    //   .collection("users")
-    //   .where("Email", "==", Email && "Password", "==", Email);
-    // console.log(query);
-    // query.onSnapshot((snapshot) => {
-    //   const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-    //   if (snapshot.docs.length > 0) {
-    //     localStorage.setItem("Email", Email);
-    //     localStorage.setItem("Department", dept);
-    //   }
-    //   // setFirebasedata(data);
-    //   console.log(data);
-    //   // if(!data.length ) alert("Id does not exist")
-    // });
 
-    db.collection("users")
-      .where("Email", "==", Email)
-      .where("Password", "==", Password)
+     db.collection("users")
+      .where("Email", "==", emailRef.current.value)
+    
       .get()
       .then((querySnapshot) => {
         const queryData = querySnapshot.docs.map((detail) => ({
@@ -69,13 +60,15 @@ export default function Login() {
 
         if (querySnapshot.docs.length > 0) {
           // alert("Login successful");
-          localStorage.setItem("Email", Email);
+          localStorage.setItem("Email", emailRef.current.value);
           queryData.forEach((item) => {
             // console.log(item.Department);
+
             localStorage.setItem("Department", item.Department);
           });
 
-          window.location.reload();
+          // window.location.reload();
+
         } else {
           Swal.fire({
             title: "Login Failed",
@@ -89,67 +82,28 @@ export default function Login() {
         console.error(error);
       });
 
-    // try {
-    //   setError("");
 
-    //   setLoading(true);
-    //   console.log(firebasedata);
+    setLoading(false);
 
-    //   // dept = firebasedata.Role;
-    //   // console.log(dept);
-    //   // console.log({ Email, Password, Role });
+    try {
+      setError("");
+      setLoading(true);
+      await login(emailRef.current.value, passwordRef.current.value);
 
-    //   // firebasedata.forEach((user) => {
-    //   //   console.log(user.Department);
 
-    //   //   dept = user.Department;
-    //   //   console.log(dept);
-    //   //   console.log(user.Password);
-    //   //   if (
-    //   //     Email === user.Email &&
-    //   //     Password === user.Password
-    //   //     // Role === user.Role
-    //   //   ) {
-    //   //     localStorage.setItem("Email", Email);
-    //   //     localStorage.setItem("Department", dept);
 
-    //   //     // navigate("/");
-    //   //     // window.location.reload();
-    //   //     // <Alert>{"Login Successful"}</Alert>;
-    //   //     userData();
-    //   //   } else {
-    //   //     Swal.fire({
-    //   //       title: "Login Failed",
-    //   //       text: "Please Check Email And Password",
-    //   //       icon: "error",
-    //   //       confirmButtonText: "OK",
-    //   //     });
-    //   //   }
-    //   // });
-    // } catch {
-    //   // setError("Email And Password Does Not Match");
-    // }
+
+      
+      navigate("/Dashboard");
+    } catch {
+      setError("Failed to log in");
+    }
 
     setLoading(false);
   }
-  useEffect(() => {
-    // const query = db
-    //   .collection("users")
-    //   .where("Email", "==", Email && "Password", "==", Password);
-    // console.log(query);
-    // const unsubscribe = query.onSnapshot((snapshot) => {
-    //   const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-    //   if (data.length > 0) {
-    //     localStorage.setItem("Email", Email);
-    //     localStorage.setItem("Department", dept);
-    //   }
-    //   setFirebasedata(data);
-    //   console.log(data);
-    //   // if(!data.length ) alert("Id does not exist")
-    // });
-    // return () => unsubscribe();
-    // unsubscribe();
-  }, [Email]);
+  // useEffect(() => {
+
+  // }, [Email]);
 
   return (
     <>
@@ -264,7 +218,7 @@ export default function Login() {
                   </Button>
                 </Form>
                 <div className="w-100 text-center mt-2">
-                  Already Have an account? <Link to="/signup">Sign UP</Link>
+                  Already Have an account? <Link to="/signup" replace={true}>Sign UP</Link>
                 </div>
               </Card.Body>
             </Card>

@@ -56,7 +56,7 @@ export default function Signup() {
       await signup(emailRef.current.value, passwordRef.current.value);
       // history.push("/");
     } catch {
-      setError("Failed to create an account Please Enter A Strong Password");
+      setError("Failed to create an account Please Check the Email And Password ");
     }
 
     setLoading(false);
@@ -68,7 +68,7 @@ export default function Signup() {
       id: detail.id,
     }));
 
-    console.log(queryData);
+    // console.log(queryData);
     queryData.map(async (v) => {
       // console.log(v )
       await setDoc(doc(db, "users", email.email), {

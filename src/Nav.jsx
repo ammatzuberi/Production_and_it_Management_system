@@ -6,9 +6,11 @@ import MenuItem from "@mui/material/MenuItem";
 import { FaUserAlt } from "react-icons/fa";
 import { fontSize } from "@mui/system";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "./Component/context/AuthContext";
 
 export default function Nav() {
   const navigate = useNavigate();
+  const {currentUser, logout}=useAuth();
   var emailLogin = localStorage.getItem("Email");
   var Department = localStorage.getItem("Department");
 
@@ -21,15 +23,16 @@ export default function Nav() {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const logout = () => {
+  async function handleLogout() {
+
+
     try {
-      localStorage.clear();
-      navigate("/login");
-      window.location.reload();
+      await logout()
+     navigate("/login")
     } catch {
-      console.error("");
+      setError("Failed to log out")
     }
-  };
+  }
 
   return (
     <div style={{ backgroundColor: "red !important" }}>
@@ -42,7 +45,7 @@ export default function Nav() {
           // position: "absolute",
 
           width: "100% !important",
-          display: "flex",
+ 
           justifyContent: "center",
           backgroundColor: "#ffff",
           borderBottom: " 1px solid #e2e5ed",
@@ -152,11 +155,11 @@ export default function Nav() {
                     color: "#56799a",
                   }}
                 >
-                  {emailLogin}
+                  {currentUser.email}
                 </span>{" "}
               </MenuItem>
               <MenuItem
-                onClick={logout}
+                onClick={handleLogout}
                 style={{
                   display: "flex",
                   alignItems: "center",

@@ -20,7 +20,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import { MultiSelect } from "react-multi-select-component";
 import Swal from "sweetalert2";
 import AddIcon from "@mui/icons-material/Add";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { db } from "../../Firebase";
 import { collection, query, getDocs } from "firebase/firestore";
 import "./Production.css";
@@ -101,12 +101,12 @@ export default function Production() {
     setShowproductin(false);
 
     const q = query(collection(db, "ProductionData"));
-    const querySnapshot = await getDocs(q);
+    const querySnapshot = await getDocs(q); 
     const queryData = querySnapshot.docs.map((detail) => ({
       ...detail.data(),
       id: detail.id,
     }));
-    setFirebasedata(queryData);
+    // setFirebasedata(queryData);
     // console.log(queryData);
     queryData.map(async (v) => {
       const docRef = db
@@ -206,32 +206,34 @@ export default function Production() {
     });
   };
 
-  const ShowData = useCallback(
-    async (e) => {
-      const q = query(collection(db, "ProductionData"));
-      const querySnapshot = await getDocs(q);
-      const queryData = querySnapshot.docs.map((detail) => ({
-        id: detail.id,
-        ...detail.data(),
-      }));
+  const proRef = useRef("");
 
-      // console.log(queryData.at(1));
+  const ShowData = async (e) => {
+    const q = query(collection(db, "ProductionData"));
+    const querySnapshot = await getDocs(q);
+    const queryData = querySnapshot.docs.map((detail) => ({
+      id: detail.id,
+      ...detail.data(),
+    }));
 
-      setFirebasedata(queryData);
+    // console.log(queryData.at(1));
 
-      queryData.forEach((issueData) => {
-        // console.log(issueData.ProductionData);
+    setFirebasedata(queryData);
+    proRef.current = queryData;
+    // console.log(proRef.current);
 
-        ptable = issueData.ProductionData;
+    queryData.forEach((issueData) => {
+      // console.log(issueData.ProductionData);
 
-        issues_data = issueData.Issue;
-        // console.log(issueData.Issue)e
+      ptable = issueData.ProductionData;
 
-        // console.log(issues_data)
-      });
-    },
-    [firebaseData]
-  );
+      issues_data = issueData.Issue;
+      // console.log(issueData.Issue)e
+
+      // console.log(issues_data)
+    });
+  };
+  console.log(proRef);
   const [selected, setSelected] = useState([]);
 
   const handleCheckbox = (e) => {
@@ -381,7 +383,7 @@ export default function Production() {
       ...detail.data(),
       id: detail.id,
     }));
-    setFirebasedata(queryData);
+    // setFirebasedata(queryData);
     // console.log(queryData);
     queryData.map(async (v) => {
       const docRef = db
@@ -418,7 +420,7 @@ export default function Production() {
       }
     });
     console.log(queryData);
-    setFirebasedata(queryData);
+    // setFirebasedata(queryData);
 
     // window.location.reload();
   };
@@ -582,16 +584,14 @@ export default function Production() {
   //   ? Math.ceil(FilterData.length / itemsPerPage)
   //   : Math.ceil(firebaseData.length / itemsPerPage);
 
+  console.log(proRef);
+
   useEffect(() => {
+    // console;
     PrevParameter();
-    return () => {
-      ShowData();
-    };
+    ShowData();
+
   }, []);
-  // useEffect(() => {
-  //   // console.log(firebaseData);
-  // }),
-  //   [ShowData()];
 
   var columns = [
     {
@@ -629,7 +629,11 @@ export default function Production() {
       field: "Edit",
     },
   ];
+  // var rows = proRef.current?.map((item) => {
+  //   console.log(item);
+  // });
 
+  // console.log(proRef.current.map((item)=>));
   var rows = firebaseData?.map((row) => ({
     id: row?.id,
     headname: row?.ProductionData?.headname,

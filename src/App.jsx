@@ -23,23 +23,11 @@ import Nav from "./Nav";
 import Test from "./Test";
 import Textmessage from "./Textmessage";
 import Edit from "./Edit";
+import PrivateRouter from "./PrivateRouter";
+import Nouser from "./Nouser";
+import Signup_validation from "./Signup_validation";
 
 function App() {
-  var email = localStorage.getItem("Email");
-
-  // useEffect(()=>{
-  //   const  email=JSON.parse(localStorage.getItem("Email" ,JSON.stringify("Email")))
-  //   if(email){
-  //     setItems(email)
-
-  //   }
-  //   console.log(items)
-
-  // },[])
-
-  // const currentUser = useAuth();
-  // console.log(currentUser?.email);
-
   return (
     <>
       {/* <Textmessage /> */}
@@ -48,25 +36,15 @@ function App() {
       <BrowserRouter>
         <AuthProvider>
           <Routes>
-            <Route
-              exact
-              path="/"
-              element={
-                email != null ? (
-                  <Production />
-                ) : (
-                  <Navigate to="/login" replace={true} />
-                )
-              }
-            />
-            <Route path="/Edit" element={<Edit />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route
-              path="/login"
-              element={
-                email == null ? <Login /> : <Navigate to="/" replace={true} />
-              }
-            />
+            <Route element={<PrivateRouter />}>
+              <Route exact path="/Dashboard" Component={Production} />
+            </Route>
+            <Route element={<Nouser />}>
+              <Route path="/login" element={<Login />} />
+            </Route>
+            <Route element={<Signup_validation />}>
+              <Route path="/signup" element={<Signup />} />
+            </Route>
           </Routes>
         </AuthProvider>
       </BrowserRouter>
